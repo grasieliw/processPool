@@ -5,8 +5,16 @@
 #include "Process/PrintingProcess.h"
 #include <fstream>
 
-System::System() {}
-System::~System() {}
+System::System() {
+    // Initialize the process list when the system is constructed
+    processList = new ProcessList();
+}
+
+System::~System() {
+    // Clean up and free the process list and any remaining processes
+    delete processList;
+    processList = nullptr;
+}
 
 void System::adicionarProcesso(Process* p) {
     processList->insert(p);
@@ -19,6 +27,9 @@ void System::executarProcessoPorPid(int pid) {
     }
     
     processo->execute();
+    // The system takes ownership of the removed process pointer and is
+    // responsible for deleting it after execution to avoid leaks.
+    delete processo;
 }
 
 void System::executarProximoProcesso() {
@@ -29,6 +40,8 @@ void System::executarProximoProcesso() {
     }
     
     processo->execute();
+    // Delete the process once executed
+    delete processo;
 }
 
 void System::salvarEstadoSistema(string nomeArquivo) {

@@ -16,7 +16,22 @@ ProcessList::ProcessList() {
     last = nullptr;
 }
 
-ProcessList::~ProcessList() {}
+ProcessList::~ProcessList() {
+    Nodo* atual = first;
+    while (atual != nullptr) {
+        Nodo* proxNodo = atual->prox;
+        // Delete the process object
+        if (atual->valor != nullptr) {
+            delete atual->valor;
+            atual->valor = nullptr;
+        }
+        // Delete the node itself
+        delete atual;
+        atual = proxNodo;
+    }
+    first = nullptr;
+    last = nullptr;
+}
 
 void ProcessList::insert(Process* p) {
     if (p == nullptr) return;
@@ -48,6 +63,8 @@ Process* ProcessList::removeNext() {
         last = nullptr; //lista ficou vazia
     }
 
+    // Free the node container but not the Process* (caller owns the process)
+    delete temp;
     return removedProcess;
 }
 
@@ -76,6 +93,8 @@ Process* ProcessList::removeByPid(int pid) {
         last = nodoAnterior; 
     } 
     
+    // Free the node container, but not the Process* (caller owns the process)
+    delete nodoRemover;
     return processoRemovido;
 }
 
