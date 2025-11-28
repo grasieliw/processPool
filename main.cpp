@@ -1,3 +1,4 @@
+#include "Model/Process/ComputingProcess.h"
 #include "Model/Process/WritingProcess.h"
 #include "Model/Process/ReadingProcess.h"
 #include "Model/Process/PrintingProcess.h"

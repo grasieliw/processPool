@@ -1,8 +1,13 @@
 #include <iostream>
 #include <vector>
+ #include <fstream>
 
 #include "Process/Process.h"
 #include "ProcessList.h"
+#include "Process/ComputingProcess.h"
+#include "Process/WritingProcess.h"
+#include "Process/ReadingProcess.h"
+#include "Process/PrintingProcess.h"
 
 using namespace std;
 
@@ -97,9 +102,95 @@ int ProcessList::tamanho() {
     }
     return count;
 }
+    
+void ProcessList::salvarEstado(string nomeArquivo) { 
 
-void ProcessList::salvarEstado(string nomeArquivo) { /* Lógica de salvar */ }
-void ProcessList::carregarEstado(string nomeArquivo) { /* Lógica de carregar */ }
+    ofstream ofs(nomeArquivo, ios::out | ios::trunc);
+    if (!ofs.is_open()) {
+        cerr << "Erro ao abrir arquivo: " << nomeArquivo << endl;
+        return;
+    }
+
+    Nodo* atual = first;
+    while (atual != nullptr) {
+        Process* p = atual->valor;
+        if (p != nullptr) {
+            
+            int tipo = static_cast<int>(p->getTipo());
+            switch (tipo) {
+                case TIPO_COMPUTING:
+                    ComputingProcess* c = dynamic_cast<ComputingProcess*>(p);
+                    ofs << p->getPid() << ";COMPUTING;" << c->getOperand1() << ";" << c->getOperador() << ";" << c->getOperand2() << '\n';
+                    break;
+
+                case TIPO_WRITING:
+                    WritingProcess* c = dynamic_cast<WritingProcess*>(p);
+                    ofs << p->getPid() << ";WRITING;" << c->getExpression() << '\n';
+                    break;
+
+                case TIPO_READING:
+                    ofs << p->getPid() << ";READING" << '\n';
+                    break;
+                case TIPO_PRINTING:
+                    ofs << p->getPid() << ";PRINTING" << '\n';
+                    break;
+                default:
+                    ofs << "UNKNOWN" << '\n';
+                    break;
+            }
+        }
+        atual = atual->prox;
+    }
+
+    ofs.close();
+}
+
+void ProcessList::carregarEstado(string nomeArquivo) { 
+    
+    ifstream ifs(nomeArquivo, ios::in);
+    if (!ifs.is_open()) {
+        cerr << "Erro ao abrir arquivo: " << nomeArquivo << endl;
+        return;
+    }
+
+    string linha;
+    while (getline(ifs, linha)) {
+        size_t pos = 0;
+        vector<string> campos;
+        string campo;
+        
+        while ((pos = linha.find(';')) != string::npos) {
+            campo = linha.substr(0, pos);
+            campos.push_back(campo);
+            linha.erase(0, pos + 1);
+        }
+        campos.push_back(linha);
+        
+        if (campos.size() < 2) continue;
+        
+        int pid = stoi(campos[0]);
+        string tipo = campos[1];
+        
+        if (tipo == "COMPUTING" && campos.size() >= 5) {
+            int op1 = stoi(campos[2]);
+            char operador = campos[3][0];
+            int op2 = stoi(campos[4]);
+            insert(new ComputingProcess(pid, op1, operador, op2));
+        } 
+        else if (tipo == "WRITING" && campos.size() >= 3) {
+            insert(new WritingProcess(pid, campos[2]));
+        } 
+        else if (tipo == "READING") {
+            insert(new ReadingProcess(pid));
+        } 
+        else if (tipo == "PRINTING") {
+            insert(new PrintingProcess(pid));
+        }
+    }
+
+    ifs.close();
+
+ }
 
 Nodo* ProcessList::buscaDoRemove(int pid) {
     if (first == nullptr) {

@@ -11,6 +11,9 @@ class WritingProcess : public Process {
        WritingProcess(int pid, string expression);
        ~WritingProcess();
 
+      void setExpression(const string& expr) { expression = expr; }
+      string getExpression() const { return expression; }
+
        void execute() override;
        TipoProcesso getTipo() override;
        

@@ -13,6 +13,13 @@ class ComputingProcess : public Process {
 
        string getExpression();
 
+       void setOperand1(double op1) { operand1 = op1; }
+       void setOperand2(double op2) { operand2 = op2; }
+       void setOperador(char op) { operador = op; }
+       double getOperand1() const { return operand1; }
+       double getOperand2() const { return operand2; }
+        char getOperador() const { return operador; }
+
        void execute() override;
        TipoProcesso getTipo() override;
        
