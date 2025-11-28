@@ -6,7 +6,31 @@
 #include "Model/System.h"
 #include <iostream>
 #include <vector>
+#include <sstream>
+#include <string>
 using namespace std;
+
+static bool validarExpressaoMain(const std::string &expr) {
+    istringstream iss(expr);
+    string t1, t2, t3, extra;
+    if (!(iss >> t1 >> t2 >> t3)) return false; // não encontrou 3 tokens
+    if (iss >> extra) return false; // tokens extras -> inválido
+
+    if (t2.size() != 1) return false;
+    char op = t2[0];
+    if (std::string("+-*/").find(op) == string::npos) return false;
+
+    try {
+        size_t pos = 0;
+        stod(t1, &pos);
+        if (pos != t1.size()) return false;
+        stod(t3, &pos);
+        if (pos != t3.size()) return false;
+    } catch (...) {
+        return false;
+    }
+    return true;
+}
 
 int main() {
    
@@ -32,47 +56,47 @@ int main() {
                 
                 switch(type) {
                     case 1: {
-                        int pid;
                         string expression;
-                        cout << "Enter PID: ";
-                        cin >> pid;
-                        cout << "Enter full expression (e.g., 5 + 3): ";
+                        int pid = system.getNextPid();
+                        cout << "Escreva a expressao inteira (e.g., 5 + 3): ";
                         cin.ignore();
                         getline(cin, expression);
 
                         system.adicionarProcesso(new ComputingProcess(pid, expression));
+                        cout << "Processo COMPUTING com PID " << pid << " adicionado." << endl;
                         break;
                     }
                     case 2: {
-                        int pid;
                         string data;
-                        cout << "Enter PID: ";
-                        cin >> pid;
-                        cout << "Enter data to write: ";
+                        int pid = system.getNextPid();
+                        cout << "Escreva os dados para escrever: ";
                         cin.ignore();
                         getline(cin, data);
 
-                        system.adicionarProcesso(new WritingProcess(pid, data));
+                        if (!validarExpressaoMain(data)) {
+                             cout << "[ERRO] Expressao invalida para WRITING (PID " << pid << "): '" << data << "'. Processo ignorado." << endl;
+                             break;
+                        } else {
+                            system.adicionarProcesso(new WritingProcess(pid, data));
+                            cout << "Processo WRITING com PID " << pid << " adicionado." << endl;
+                        }
                         break;
                     }
                     case 3: {
-                        int pid;
-                        cout << "Enter PID: ";
-                        cin >> pid;
-
+                        int pid = system.getNextPid();    
                         system.adicionarProcesso(new ReadingProcess(pid, system.getProcessList()));
+                        cout << "Processo READING com PID " << pid << " adicionado." << endl;
                         break;
                     }
                     case 4: {
-                        int pid;
-                        cout << "Enter PID: ";
-                        cin >> pid;
+                        int pid= system.getNextPid();
 
                         system.adicionarProcesso(new PrintingProcess(pid, system.getProcessList()));
+                        cout << "Processo PRINTING com PID " << pid << " adicionado." << endl;
                         break;
                     }
                     default:
-                        cout << "Invalid process type!" << endl;
+                        cout << "Tipo de processo invalido!" << endl;
                 }
 
                 break;
@@ -84,7 +108,7 @@ int main() {
             }
             case 3: {
                 int id;
-                cout << "Enter Process ID to execute: ";
+                cout << "Escolha o PID para executar: ";
                 cin >> id;
                 
                 system.executarProcessoPorPid(id);
@@ -92,7 +116,7 @@ int main() {
             }
             case 4: {
                 string filename;
-                cout << "Enter filename to save the process list: ";
+                cout << "Escreva a FileName para salvar a lista de processos: ";
                 cin >> filename;
                 
                 system.salvarEstadoSistema(filename);
@@ -100,7 +124,7 @@ int main() {
             }
             case 5: {
                 string nomeArquivo;
-                cout << "Enter filename to save the process list: ";
+                cout << "Escreva a FileName para carregar a lista de processos: ";
                 cin >> nomeArquivo;
 
                 system.carregarEstadoSistema(nomeArquivo);
@@ -108,10 +132,10 @@ int main() {
             }
 
             case 6:
-                cout << "Exiting..." << endl;
+                cout << "Saindo..." << endl;
                 return 0;
             default:
-                cout << "Invalid choice!" << endl;
+                cout << "Escolha Invalida!" << endl;
         }
     }
     

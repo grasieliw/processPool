@@ -1,7 +1,6 @@
 #ifndef PRINTINGPROCESS_H
 #define PRINTINGPROCESS_H
 
-
 #include <string>
 
 #include "Process.h"
@@ -16,8 +15,8 @@ class PrintingProcess : public Process {
         ~PrintingProcess();
 
         void execute() override; 
+        
         TipoProcesso getTipo() override;
-
         ProcessList* getProcessList() const { return processList; }
 
     private:

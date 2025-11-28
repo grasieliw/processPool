@@ -1,7 +1,8 @@
-#include "WritingProcess.h"
 #include <fstream>
 #include <iostream>
 #include <string>
+
+#include "WritingProcess.h"
 
 const string NOME_ARQUIVO = "computation.txt";
 

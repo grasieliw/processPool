@@ -8,14 +8,16 @@ using namespace std;
 class WritingProcess : public Process {
 
     public:
-       WritingProcess(int pid, string expression);
-       ~WritingProcess();
+         WritingProcess(int pid, string expression);
+         ~WritingProcess();
 
-      void setExpression(const string& expr) { expression = expr; }
-      string getExpression() const { return expression; }
+        void setExpression(const string& expr) { expression = expr; }
+        
+        string getExpression() const { return expression; }
+        TipoProcesso getTipo() override;
+
 
        void execute() override;
-       TipoProcesso getTipo() override;
        
     private:
         string expression;

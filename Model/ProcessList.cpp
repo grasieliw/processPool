@@ -1,6 +1,5 @@
 #include <iostream>
 #include <vector>
- 
 
 #include "Process/Process.h"
 #include "ProcessList.h"
@@ -20,15 +19,16 @@ ProcessList::~ProcessList() {
     Nodo* atual = first;
     while (atual != nullptr) {
         Nodo* proxNodo = atual->prox;
-        // Delete the process object
+
         if (atual->valor != nullptr) {
             delete atual->valor;
             atual->valor = nullptr;
         }
-        // Delete the node itself
+
         delete atual;
         atual = proxNodo;
     }
+
     first = nullptr;
     last = nullptr;
 }
@@ -51,7 +51,7 @@ void ProcessList::insert(Process* p) {
 
 Process* ProcessList::removeNext() {
     if (first == nullptr) {
-        return nullptr; //lista vazia
+        return nullptr;
     }
 
     Nodo* temp = first;
@@ -60,17 +60,16 @@ Process* ProcessList::removeNext() {
     first = first->prox;
 
     if (first == nullptr) {
-        last = nullptr; //lista ficou vazia
+        last = nullptr; 
     }
 
-    // Free the node container but not the Process* (caller owns the process)
     delete temp;
     return removedProcess;
 }
 
 Process* ProcessList::removeByPid(int pid) {
     if (first == nullptr) {
-        return nullptr; // Fila vazia
+        return nullptr; 
     }
 
     if (first->valor->getPid() == pid) {
@@ -93,7 +92,6 @@ Process* ProcessList::removeByPid(int pid) {
         last = nodoAnterior; 
     } 
     
-    // Free the node container, but not the Process* (caller owns the process)
     delete nodoRemover;
     return processoRemovido;
 }
@@ -115,23 +113,13 @@ bool ProcessList::estaVazia() {
 int ProcessList::tamanho() {
     int count = 0;
     Nodo* atual = first;
+
     while (atual) {
         count++;
         atual = atual->prox;
     }
     return count;
 }
-    
-void ProcessList::salvarEstado(string nomeArquivo) { 
-
-   
-}
-
-void ProcessList::carregarEstado(string nomeArquivo) { 
-    
-    
-
- }
 
 Nodo* ProcessList::buscaDoRemove(int pid) {
     if (first == nullptr) {

@@ -4,8 +4,6 @@
 
 #include "ReadingProcess.h"
 
-static int nextPidParaCalculo = 4000;
-
 ReadingProcess::ReadingProcess(int pid, ProcessList* fila) : Process(pid), processList(fila) {}
 ReadingProcess::~ReadingProcess(){}
 
@@ -14,13 +12,13 @@ void ReadingProcess::execute() {
     string linha;
     int processosCriados = 0;
 
-    cout << "Processo de Leitura (PID " << getPid() << ") iniciado." << endl;
+    cout << "\nProcesso de Leitura (PID " << getPid() << ") iniciado." << endl;
 
     if (arquivoLeitura.is_open()) {
         
         while (getline(arquivoLeitura, linha)) {
             if (!linha.empty()) {    
-                int novoPid = nextPidParaCalculo++; 
+                int novoPid = getPid();
 
                 Process* novoProcesso = new ComputingProcess(novoPid, linha); 
                 

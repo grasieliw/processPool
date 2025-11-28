@@ -6,14 +6,21 @@
 #include <fstream>
 
 System::System() {
-    // Initialize the process list when the system is constructed
     processList = new ProcessList();
+    nextPid = 1000;
 }
 
 System::~System() {
-    // Clean up and free the process list and any remaining processes
     delete processList;
     processList = nullptr;
+}
+
+int System::getNextPid() {
+    return nextPid++;
+}
+
+void System::setNextPid(int pid) {
+    if (pid > 0) nextPid = pid;
 }
 
 void System::adicionarProcesso(Process* p) {
@@ -23,12 +30,10 @@ void System::adicionarProcesso(Process* p) {
 void System::executarProcessoPorPid(int pid) {
     Process* processo = processList->removeByPid(pid);
     if (processo == nullptr) {
-        return; // Processo não encontrado
+        return; 
     }
     
     processo->execute();
-    // The system takes ownership of the removed process pointer and is
-    // responsible for deleting it after execution to avoid leaks.
     delete processo;
 }
 
@@ -36,18 +41,17 @@ void System::executarProximoProcesso() {
     Process* processo = processList->removeNext();
     if (processo == nullptr) {
         cout << "Nenhum processo para executar." << endl;
-        return; // Nenhum processo na fila
+        return;
     }
     
     processo->execute();
-    // Delete the process once executed
     delete processo;
 }
 
 void System::salvarEstadoSistema(string nomeArquivo) {
      ofstream ofs(nomeArquivo, ios::out | ios::trunc);
     if (!ofs.is_open()) {
-        cerr << "Erro ao abrir arquivo: " << nomeArquivo << endl;
+        cout << "Erro ao abrir arquivo: " << nomeArquivo << endl;
         return;
     }
 
@@ -91,11 +95,13 @@ void System::carregarEstadoSistema(string nomeArquivo) {
     
     ifstream ifs(nomeArquivo, ios::in);
     if (!ifs.is_open()) {
-        cerr << "Erro ao abrir arquivo: " << nomeArquivo << endl;
+        cout << "Erro ao abrir arquivo: " << nomeArquivo << endl;
         return;
     }
 
     string linha;
+    int maxPidLido = 0;
+
     while (getline(ifs, linha)) {
         size_t pos = 0;
         vector<string> campos;
@@ -111,6 +117,7 @@ void System::carregarEstadoSistema(string nomeArquivo) {
         if (campos.size() < 2) continue;
         
         int pid = stoi(campos[0]);
+        if (pid > maxPidLido) maxPidLido = pid;
         string tipo = campos[1];
         
         if (tipo == "COMPUTING" && campos.size() >= 5) {
@@ -133,6 +140,9 @@ void System::carregarEstadoSistema(string nomeArquivo) {
         }
     }
 
-    ifs.close();
+    if (nextPid <= maxPidLido) {
+        nextPid = maxPidLido + 1;
+    }
 
+    ifs.close();
 }

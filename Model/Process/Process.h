@@ -21,13 +21,13 @@ class Process {
         ~Process();
 
         void setPid(int pid);
+        
         int getPid();
-        virtual void execute() = 0;
         virtual TipoProcesso getTipo() = 0;
 
+        virtual void execute() = 0;
     
     private:
         int pid;
-        
 };
 #endif

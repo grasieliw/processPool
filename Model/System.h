@@ -22,9 +22,11 @@ class System {
         void carregarEstadoSistema(string nomeArquivo);
 
         ProcessList* getProcessList() const { return processList; }
+        int getNextPid();
+        void setNextPid(int pid);
 
     private:
         ProcessList* processList;
-
+        int nextPid;
 };
 #endif

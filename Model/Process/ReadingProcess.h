@@ -16,8 +16,8 @@ class ReadingProcess : public Process {
        ~ReadingProcess();
 
        void execute() override;
+       
        TipoProcesso getTipo() override;
-
        ProcessList* getProcessList() const { return processList; }
        
     private:

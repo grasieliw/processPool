@@ -1,7 +1,8 @@
-#include "ComputingProcess.h"
 #include <sstream>
 #include <stdexcept>
 #include <iostream>
+
+#include "ComputingProcess.h"
 
 ComputingProcess::ComputingProcess(int pid, string expression) : Process(pid) {
     parseAndStore(expression);
@@ -14,11 +15,11 @@ void ComputingProcess::parseAndStore(string expression) {
     char op;
     
     if (!(ss >> operand1 >> op >> operand2)) {
-        throw std::invalid_argument("Erro ao ler expressao. Formato esperado: 'NUM OPERADOR NUM'");
+        throw invalid_argument("Erro ao ler expressao. Formato esperado: 'NUM OPERADOR NUM'");
     }
 
     if (op != '+' && op != '-' && op != '*' && op != '/') {
-        throw std::invalid_argument("Operacao invalida. Use apenas +, -, *, ou /.");
+        throw invalid_argument("Operacao invalida. Use apenas +, -, *, ou /.");
     }
     
     operador = op;
@@ -32,7 +33,7 @@ string ComputingProcess::getExpression() {
 void ComputingProcess::execute() {
     double result = 0.0;
 
-    cout << "Executing Computing Process (PID = " << getPid() << ") : ";
+    cout << "\nExecutando Computing Process (PID = " << getPid() << ") : ";
     cout << operand1 << " " << operador << " " << operand2 << endl;
 
     switch (operador) {

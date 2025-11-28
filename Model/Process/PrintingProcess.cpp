@@ -53,7 +53,7 @@ void PrintingProcess::execute() {
                 cout << " | TIPO: Desconhecido";
                 break;
         }
-        cout << endl; // Nova linha para o próximo processo
+        cout << endl;
     }
     
     cout << "========================================================" << endl;
