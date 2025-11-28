@@ -6,7 +6,7 @@
 
 static int nextPidParaCalculo = 4000;
 
-ReadingProcess::ReadingProcess(int pid, ProcessList& fila) : Process(pid), processList(fila) {}
+ReadingProcess::ReadingProcess(int pid, ProcessList* fila) : Process(pid), processList(fila) {}
 ReadingProcess::~ReadingProcess(){}
 
 void ReadingProcess::execute() {
@@ -24,7 +24,7 @@ void ReadingProcess::execute() {
 
                 Process* novoProcesso = new ComputingProcess(novoPid, linha); 
                 
-                processList.insert(novoProcesso);
+                processList->insert(novoProcesso);
                 processosCriados++;
 
                 cout << "[SUCESSO] Expressao lida '" << linha << "'. Criado ComputingProcess com PID " << novoPid << "." << endl; 

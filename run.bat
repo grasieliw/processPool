@@ -1,7 +1,7 @@
 @echo off
 setlocal enabledelayedexpansion
 
-set FILES=main.cpp Model/ProcessList.cpp 
+set FILES=main.cpp Model/ProcessList.cpp Model/System.cpp 
 
 :: Adicionar Process.cpp
 set FILES=!FILES! Model/Process/Process.cpp

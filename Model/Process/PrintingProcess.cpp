@@ -8,7 +8,7 @@
 #include "WritingProcess.h"
 #include "ReadingProcess.h"
 
-PrintingProcess::PrintingProcess(int pid, ProcessList& fila) : Process(pid), processList(fila) {}
+PrintingProcess::PrintingProcess(int pid, ProcessList* fila) : Process(pid), processList(fila) {}
 PrintingProcess::~PrintingProcess(){}
 
 void PrintingProcess::execute() {
@@ -16,7 +16,7 @@ void PrintingProcess::execute() {
     cout << "  RELATORIO DO POOL DE PROCESSOS (PID: " << getPid() << ")" << endl;
     cout << "========================================================" << endl;
     
-    vector<Process*> processos = processList.getTodosProcessos(); 
+    vector<Process*> processos = processList->getTodosProcessos(); 
 
     if (processos.empty()) {
         cout << "A fila de processos esta vazia." << endl;

@@ -21,8 +21,10 @@ class System {
         void salvarEstadoSistema(string nomeArquivo);
         void carregarEstadoSistema(string nomeArquivo);
 
+        ProcessList* getProcessList() const { return processList; }
+
     private:
-        ProcessList processList;
+        ProcessList* processList;
 
 };
 #endif

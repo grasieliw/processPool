@@ -12,14 +12,16 @@ using namespace std;
 class ReadingProcess : public Process {
 
     public:
-       ReadingProcess(int pid, ProcessList& fila);
+       ReadingProcess(int pid, ProcessList* fila);
        ~ReadingProcess();
 
        void execute() override;
        TipoProcesso getTipo() override;
+
+       ProcessList* getProcessList() const { return processList; }
        
     private:
         const string NOME_ARQUIVO = "computation.txt";
-        ProcessList& processList;
+        ProcessList* processList;
 };
 #endif

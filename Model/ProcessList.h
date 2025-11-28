@@ -26,7 +26,10 @@ class ProcessList {
         bool estaVazia();
         int tamanho();
         void salvarEstado(string nomeArquivo);
-        void carregarEstado(string nomeArquivo);    
+        void carregarEstado(string nomeArquivo);
+        
+        Nodo* getFirst() { return first; }
+        Nodo* getLast() { return last; }
 
     private:
         Nodo* first;
