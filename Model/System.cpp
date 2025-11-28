@@ -4,6 +4,7 @@
 #include "Process/ReadingProcess.h"
 #include "Process/PrintingProcess.h"
 #include <fstream>
+#include <algorithm>
 
 System::System() {
     processList = new ProcessList();
@@ -77,11 +78,12 @@ void System::salvarEstadoSistema(string nomeArquivo) {
                 case TIPO_READING:
                     ofs << p->getPid() << ";READING" << '\n';
                     break;
+
                 case TIPO_PRINTING:
                     ofs << p->getPid() << ";PRINTING" << '\n';
                     break;
+
                 default:
-                    ofs << "UNKNOWN" << '\n';
                     break;
             }
         }
@@ -121,9 +123,9 @@ void System::carregarEstadoSistema(string nomeArquivo) {
         string tipo = campos[1];
         
         if (tipo == "COMPUTING" && campos.size() >= 5) {
-            int op1 = stoi(campos[2]);
+            double op1 = stod(campos[2]);
             char operador = campos[3][0];
-            int op2 = stoi(campos[4]);
+            double op2 = stod(campos[4]);
 
             string expression = to_string(op1) + " " + operador + " " + to_string(op2);
 
@@ -140,9 +142,7 @@ void System::carregarEstadoSistema(string nomeArquivo) {
         }
     }
 
-    if (nextPid <= maxPidLido) {
-        nextPid = maxPidLido + 1;
-    }
+    nextPid = std::max(nextPid, maxPidLido + 1);
 
     ifs.close();
 }
